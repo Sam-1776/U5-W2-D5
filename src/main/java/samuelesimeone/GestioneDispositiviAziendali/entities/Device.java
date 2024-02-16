@@ -18,14 +18,16 @@ public class Device {
     @Id
     @GeneratedValue
     private UUID id;
-    private String state;
+    @Enumerated(EnumType.STRING)
+    private State state;
     private String numberSeries;
     @ManyToOne
     private Employee employee;
     private String type;
 
-    public Device(String state, String numberSeries) {
+    public Device(State state, String numberSeries, String type) {
         this.state = state;
         this.numberSeries = numberSeries;
+        this.type = type;
     }
 }

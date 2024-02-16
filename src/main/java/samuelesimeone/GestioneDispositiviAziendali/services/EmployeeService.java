@@ -38,8 +38,8 @@ public class EmployeeService {
             throw new BadRequestException("Email inserita già in uso riprovare");
         });
         String avatar = "https://ui-avatars.com/api/?name=" + employee.name() + "+" + employee.surname();
-        Employee newAutore = new Employee(employee.username(), employee.name(), employee.surname(), employee.email(), avatar);
-        return employeeDAO.save(newAutore);
+        Employee newEmployee = new Employee(employee.username(), employee.name(), employee.surname(), employee.email(), avatar);
+        return employeeDAO.save(newEmployee);
     }
 
     public Employee findById(UUID id){
