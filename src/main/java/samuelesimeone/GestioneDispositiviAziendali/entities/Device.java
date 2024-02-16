@@ -14,8 +14,7 @@ import java.util.UUID;
 @Setter
 @NoArgsConstructor
 @ToString
-@Inheritance(strategy = InheritanceType.SINGLE_TABLE)
-public abstract class Device {
+public class Device {
     @Id
     @GeneratedValue
     private UUID id;
@@ -23,6 +22,7 @@ public abstract class Device {
     private String numberSeries;
     @ManyToOne
     private Employee employee;
+    private String type;
 
     public Device(String state, String numberSeries) {
         this.state = state;
