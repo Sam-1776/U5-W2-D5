@@ -58,4 +58,9 @@ public class EmployeeController {
     public Employee uploadProfilePic(@RequestParam UUID id,@RequestParam("profilePic") MultipartFile image) throws IOException {
         return this.employeeService.uploadProfilePic(id, image);
     }
+
+    @PostMapping("/{id}/device")
+    public Employee assignDevice(@PathVariable UUID id, @RequestParam UUID deviceId) throws Exception {
+        return this.employeeService.assignDevice(id, deviceId);
+    }
 }

@@ -53,7 +53,22 @@ public class DeviceService {
 
     public Device update(UUID id, DeviceDTO deviceUp){
         Device found = this.findById(id);
-        found.setState(found.getState());
+        switch (deviceUp.state().toLowerCase()){
+            case "disponibile":
+                found.setState(State.DISPONIBILE);
+                break;
+            case "assegnato":
+                found.setState(State.ASSEGNATO);
+                break;
+            case "dismesso":
+                found.setState(State.DISMESSO);
+                break;
+            case "manutenzione":
+                found.setState(State.MANUTENZIONE);
+                break;
+            default:
+                throw new BadRequestException("Lo stato del dispositivo non è stato inserito correttamente, riprovare");
+        }
         found.setNumberSeries(deviceUp.numberSeries());
         found.setType(deviceUp.type());
         found.setEmployee(found.getEmployee());

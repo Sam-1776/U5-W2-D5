@@ -9,14 +9,19 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import samuelesimeone.GestioneDispositiviAziendali.dao.DeviceDAO;
 import samuelesimeone.GestioneDispositiviAziendali.dao.EmployeeDAO;
 import samuelesimeone.GestioneDispositiviAziendali.dto.EmployeeDTO;
+import samuelesimeone.GestioneDispositiviAziendali.entities.Device;
 import samuelesimeone.GestioneDispositiviAziendali.entities.Employee;
+import samuelesimeone.GestioneDispositiviAziendali.entities.State;
 import samuelesimeone.GestioneDispositiviAziendali.exceptions.BadRequestException;
 import samuelesimeone.GestioneDispositiviAziendali.exceptions.NotFoundException;
 
 import java.io.IOException;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -27,6 +32,12 @@ public class EmployeeService {
 
     @Autowired
     Cloudinary cloudinary;
+
+    @Autowired
+    DeviceService deviceService;
+
+    @Autowired
+    DeviceDAO deviceDAO;
 
     public Page<Employee> getAll(int pageN, int pageS, String OrderBY){
         Pageable pageable = PageRequest.of(pageN, pageS, Sort.by(OrderBY));
@@ -72,5 +83,30 @@ public class EmployeeService {
         found.setProfilePic(profilePic);
         found.setDevices(found.getDevices());
         return employeeDAO.save(found);
+    }
+
+    public Employee assignDevice(UUID id, UUID deviceID) throws Exception {
+        Employee employee = this.findById(id);
+        List<Device> devices = new ArrayList<>();
+        if (!employee.getDevices().isEmpty()){
+            devices.addAll(employee.getDevices());
+        }
+        Device device = deviceService.findById(deviceID);
+        if (!device.getState().equals(State.DISPONIBILE)){
+            throw new Exception();
+        }
+        device.setState(State.ASSEGNATO);
+        device.setNumberSeries(device.getNumberSeries());
+        device.setType(device.getType());
+        device.setEmployee(employee);
+        devices.add(device);
+        employee.setDevices(devices);
+        employee.setUsername(employee.getUsername());
+        employee.setName(employee.getName());
+        employee.setSurname(employee.getSurname());
+        employee.setEmail(employee.getEmail());
+        employee.setProfilePic(employee.getProfilePic());
+        deviceDAO.save(device);
+        return employeeDAO.save(employee);
     }
 }

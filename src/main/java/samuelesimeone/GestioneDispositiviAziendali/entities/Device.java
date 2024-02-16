@@ -1,5 +1,6 @@
 package samuelesimeone.GestioneDispositiviAziendali.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -22,6 +23,7 @@ public class Device {
     private State state;
     private String numberSeries;
     @ManyToOne
+    @JsonIgnore
     private Employee employee;
     private String type;
 
@@ -30,4 +32,5 @@ public class Device {
         this.numberSeries = numberSeries;
         this.type = type;
     }
+
 }
